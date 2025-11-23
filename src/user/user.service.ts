@@ -36,6 +36,19 @@ export class UserService {
     return user;
   }
 
+  async getUserWithPassword(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: { ...this.userSelect, password: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Користувача з таким email не існує.');
+    }
+
+    return user;
+  }
+
   async getById(id: string) {
     const user = await this.userRepository.findOne({
       where: { id },
@@ -67,5 +80,7 @@ export class UserService {
     const user = this.userRepository.create({ ...dto, password: await hash(dto.password) });
 
     await this.userRepository.save(user);
+
+    return user;
   }
 }

@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Todo } from 'src/todo/entity/todo.entity';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum Role {
   user = 'user',
@@ -21,6 +22,11 @@ export class User {
 
   @Column({ type: 'enum', enum: Role, default: Role.user })
   role: Role;
+
+  @OneToMany(() => Todo, (todo) => todo.user, {
+    cascade: true,
+  })
+  todos?: Todo[];
 
   @CreateDateColumn()
   createdAt: Date;
